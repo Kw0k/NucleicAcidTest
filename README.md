@@ -9,6 +9,8 @@ nat.sql 为数据库文件 (admin默认密码为123456)
 
 （提醒：部署在服务器上时，请配置SSL证书，前端通过浏览器调用摄像头时必须为https协议）
 
+功能演示视频：https://www.bilibili.com/video/BV1Cq4y1k71h/
+
 ## 项目配置
 
 运行前请修改配置
@@ -57,3 +59,9 @@ WeChat: #微信公众号相关配置 用户端需要在微信内打开 此参数
 超级管理员可进行检测结果查询、人员信息查询、以及所有单位的试管管理、任务管理和采集人员管理
 
 单位账号可进行本单位下的试管管理、任务管理和采集人员管理
+
+## 参考项目
+
+https://github.com/dragonir/h5-scan-qrcode
+
+https://github.com/lin-xin/vue-manage-system/
