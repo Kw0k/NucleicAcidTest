@@ -1,0 +1,34 @@
+{
+  "name": "natweb",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
+  },
+  "dependencies": {
+    "@vant/area-data": "^1.2.1",
+    "@zxing/library": "^0.18.6",
+    "axios": "^0.24.0",
+    "core-js": "^3.6.5",
+    "element-ui": "^2.15.6",
+    "qrcodejs2": "^0.0.2",
+    "qs": "^6.10.2",
+    "vant": "^2.12.37",
+    "vue": "^2.6.11",
+    "vue-axios": "^3.4.0",
+    "vue-router": "^3.5.3",
+    "webrtc-adapter": "^8.1.1"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "compression-webpack-plugin": "^6.1.1",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
