@@ -73,7 +73,9 @@ public class AuthController {
     @ResponseBody
     @PostMapping("/wechat/login") //微信端登录 用户登记个人信息时需要登录
     public ResultInfo weChatLogin(@RequestParam("code") String code,HttpSession session){
-        String openid=null;
+        String openid=(String) session.getAttribute("openid");
+        if (openid!=null&&!"".equals(openid))
+            return new ResultInfo(true,200,"登录成功",null);
         try {
              openid=wechatUserService.getOpenIdByCode(code);
         } catch (IOException e) {
