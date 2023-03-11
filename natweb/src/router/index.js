@@ -7,15 +7,15 @@ export default new Router({
     routes: [
         {
             path: '/',
-            redirect:'/user'
+            redirect: '/user'
         },
         {
             path: '/admin',
-            redirect:'/admin/login'
+            redirect: '/admin/login'
         },
         {
             path: '/operator',
-            redirect:'/operator/login'
+            redirect: '/operator/login'
         },
         {
             path: '/admin',
@@ -64,6 +64,10 @@ export default new Router({
             path: '/user',
             component: () => import('../components/user/index.vue'),
             meta: { title: '用户首页' }
+        }, {
+            path: '/user/system/login',
+            component: () => import('../components/user/systemLogin.vue'),
+            meta: { title: '用户系统登录' }
         },
         {
             path: '/user/info',
@@ -74,23 +78,23 @@ export default new Router({
             path: '/user/search',
             component: () => import('../components/user/search.vue'),
             meta: { title: '检测结果查询' }
-        },{
+        }, {
             path: '/user/info/view',
             component: () => import('../components/user/infoView.vue'),
             meta: { title: '个人信息详情' }
-        },{
+        }, {
             path: '/user/info/edit',
             component: () => import('../components/user/infoEdit.vue'),
             meta: { title: '个人信息编辑' }
-        },{
+        }, {
             path: '/operator/index',
             component: () => import('../components/operator/index.vue'),
             meta: { title: '分组扫码' }
-        },{
+        }, {
             path: '/operator/login',
             component: () => import('../components/operator/login.vue'),
             meta: { title: '采集登陆' }
-        },{
+        }, {
             path: '/operator/selectjob',
             component: () => import('../components/operator/selectJob.vue'),
             meta: { title: '采集任务选择' }

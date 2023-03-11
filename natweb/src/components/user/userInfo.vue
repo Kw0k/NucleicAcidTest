@@ -1,91 +1,102 @@
 <template>
-<div>
-  <van-nav-bar
-      left-text="返回"
-      left-arrow
-      title="个人信息登记"
-      @click-left="onClickLeft"
-  />
-  <van-button icon="plus" class="addbutton"  type="info" size="large" to="info/edit">添加个人信息</van-button>
-  <van-divider>已登记信息</van-divider>
-  <van-list
-      finished-text="没有更多了"
-  >
-    <van-cell v-for="item in list" :key="item" :title="'姓名：'+item.tname+' 身份证号：'+item.idcardnum" :to="'info/view?idcardnum='+item.idcardnum" >
-      <van-icon  size="35" name="arrow" />
-    </van-cell>
-  </van-list>
-</div>
+  <div>
+    <van-nav-bar left-text="返回" left-arrow title="个人信息登记" @click-left="onClickLeft" />
+    <van-button icon="plus" class="addbutton" type="info" size="large" to="info/edit">添加个人信息</van-button>
+    <van-divider>已登记信息</van-divider>
+    <van-list finished-text="没有更多了">
+      <van-cell v-for="item in list" :key="item" :title="'姓名：' + item.tname + ' 身份证号：' + item.idcardnum"
+        :to="'info/view?idcardnum=' + item.idcardnum">
+        <van-icon size="35" name="arrow" />
+      </van-cell>
+    </van-list>
+  </div>
 </template>
 
 <script>
+import { getUrlParam } from "@/components/js/GetUrlParam";
 import axios from "axios";
-import {getUrlParam} from "@/components/js/GetUrlParam";
-import {Toast} from "vant";
+import { Toast } from "vant";
+
 export default {
   name: "userInfo",
   data() {
     return {
+      systemId: "systen_id",
       list: [],
     };
   },
   created() {
-      this.checkLogin();
+    if (UserLoginConfig.useWechet) {
+      this.checkWechetLogin();
+    } else {
+      this.checkSystemLogin();
+    }
   },
   methods: {
-    checkLogin(){
+    checkSystemLogin() {
+      console.log("执行系统登录检测");
+      var systemId = this.$cookies.get(this.systemId)
+      console.log(systemId);
+      if (systemId == null) {
+        Toast.fail("请先登录");
+        this.$router.push("/user/system/login")
+      }
+    },
+    checkWechetLogin() {
+      console.log("执行微信登录检测");
       axios.post(
-          '/wechat/checklogin',
-      ).then((response) =>{
-        if (response.data.flag){
+        '/wechat/checklogin',
+      ).then((response) => {
+        if (response.data.flag) {
           //已登陆
           this.getUserInfo()
-        }else {
+        } else {
           this.getCode()
         }
       })
-          .catch(function (error) {
-            console.log(error);
-          });
+        .catch(function (error) {
+          console.log(error);
+        });
     },
     onClickLeft() {
+      //返回上一个界面
       this.$router.push("/user")
     },
-    getUserInfo(){ //获取当前微信登记过的个人信息
+    getUserInfo() { //获取当前微信登记过的个人信息
       axios.post(
-          '/wechat/userInfoAll'
-      ).then((response) =>{
-        if (response.data.flag){
-         this.list=response.data.data;
-        }else {
+        '/wechat/userInfoAll'
+      ).then((response) => {
+        if (response.data.flag) {
+          this.list = response.data.data;
+        } else {
           Toast.fail(response.data.msg);
-          if (response.data.code===408){
+          if (response.data.code === 408) {
             this.$router.push("/user/info")
           }
         }
       })
-          .catch(function (error) {
-            console.log(error);
-          });
+        .catch(function (error) {
+          console.log(error);
+        });
     },
-    login(code){
+    login(code) {
       axios.post(
-          '/wechat/login',
-          this.qs.stringify({
-            code: code
-          })
-      ).then((response) =>{
-        if (response.data.flag){
+        '/wechat/login',
+        this.qs.stringify({
+          code: code
+        })
+      ).then((response) => {
+        if (response.data.flag) {
           var _url = window.location.protocol + '//' + window.location.host + '/#/user/info';
-          window.history.pushState({},0, _url)
+          window.history.pushState({}, 0, _url)
           this.getUserInfo()
-        }else {
+        } else {
           console.log(response.data.msg)
         }
       })
-      .catch(function (error) {
-            console.log(error);
-          });
+        .catch(function (error) {
+          console.log(error);
+        });
     },
     getCode() {
       const code = getUrlParam('code') // 截取路径中的code，如果没有就去微信授权，如果已经获取到了就直接传code给后台
@@ -101,7 +112,7 @@ export default {
 </script>
 
 <style scoped>
-.addbutton{
+.addbutton {
   margin-top: 10px;
   height: 80px;
 }
