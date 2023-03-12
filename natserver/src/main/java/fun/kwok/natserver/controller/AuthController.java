@@ -4,6 +4,7 @@ import fun.kwok.natserver.entity.ResultInfo;
 import fun.kwok.natserver.entity.SystemUser;
 import fun.kwok.natserver.service.AuthService;
 import fun.kwok.natserver.service.SystemUserService;
+import fun.kwok.natserver.service.SystemV2UserService;
 import fun.kwok.natserver.service.WechatUserService;
 import fun.kwok.natserver.utils.CheckCodeUtil;
 import fun.kwok.natserver.utils.MD5Util;
@@ -31,6 +32,8 @@ public class AuthController {
     SystemUserService systemUserService;
     @Autowired
     WechatUserService wechatUserService;
+    @Autowired
+    SystemV2UserService systemV2UserService;
     @Autowired
     AuthService authService;
 
@@ -66,11 +69,26 @@ public class AuthController {
         return new ResultInfo(true, 200, "退出成功", null);
     }
 
+
+    @ResponseBody
+    @PostMapping("/system-v2/register-login")//普通用户系统注册
+    public ResultInfo registerUser(HttpSession session, HttpServletResponse response, @RequestParam("username") String username,
+                                   @RequestParam("password") String password) {
+        return systemV2UserService.systemV2LoginOrRegister(session,response, username, password);
+    }
+
+    @ResponseBody
+    @PostMapping("/system-v2/checklogin")//普通用户系统登录检测
+    public ResultInfo checkLogin(HttpServletRequest request) {
+        return systemV2UserService.systemV2CheckLogin(request);
+    }
+
     @ResponseBody
     @PostMapping("/wechat/checklogin") //用户端检查是否已登陆
     public ResultInfo weChatCheckLogin(HttpSession session) {
         return authService.weChatCheckLogin(session);
     }
+
 
     @ResponseBody
     @PostMapping("/wechat/login") //微信端登录 用户登记个人信息时需要登录

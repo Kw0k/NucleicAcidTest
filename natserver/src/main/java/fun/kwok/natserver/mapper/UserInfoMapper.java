@@ -16,6 +16,12 @@ public interface UserInfoMapper {
     @Insert({"insert into userInfo(idcardnum,tname,sex,phonenum,area,address) values(#{idcardnum},#{tname},#{sex},#{phonenum},#{area},#{address})"})
     int addUserInfo(UserInfo userInfo);
 
+    /**
+     * 根据身份证来修改用户数据
+     *
+     * @param userInfo
+     * @return
+     */
     @Update({"UPDATE userInfo SET tname=#{tname},sex=#{sex},phonenum=#{phonenum},area=#{area},address=#{address} where idcardnum=#{idcardnum}"})
     int updateUserInfo(UserInfo userInfo);
 
@@ -29,14 +35,22 @@ public interface UserInfoMapper {
     List<UserInfo> getUserInfoByOpenIdAndIdCardNum(WechatUser wechatUser);
 
     @Select({"<script>SELECT * FROM userInfo"
-            +"<where>"
-            +"<if test='idcardnum!=null'> idcardnum=#{idcardnum} </if>"+
+            + "<where>"
+            + "<if test='idcardnum!=null'> idcardnum=#{idcardnum} </if>" +
             "</where></script>"
     })
     List<UserInfo> getAllUserInfo(String idcardnum);
 
 
-
     @Select("Select count(*) from userInfo")
     int userInfoCount();
+
+
+    @Select({"SELECT * FROM userInfo JOIN system_v2_user ON system_v2_user.idcardnum= userInfo.idcardnum WHERE system_v2_user.username=#{username}"})
+    List<UserInfo> getUserInfoBySystemV2AndIdCardNum(String idcardnum, String username);
+
+
+    @Select({"SELECT * FROM userInfo JOIN system_v2_user ON system_v2_user.idcardnum= userInfo.idcardnum WHERE system_v2_user.username=#{username}"})
+    List<UserInfo> getUserInfoBySystemV2Name(String username);
+
 }

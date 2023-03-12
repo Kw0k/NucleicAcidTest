@@ -19,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 
@@ -40,30 +41,30 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors();
         http.csrf().disable();
-                http
+        http
                 .authenticationProvider(authenticationProvider())
                 .httpBasic()
-                .authenticationEntryPoint((request,response,authException) -> {
+                .authenticationEntryPoint((request, response, authException) -> {
                     response.setContentType("application/json;charset=utf-8");
                     response.setStatus(HttpServletResponse.SC_OK);
                     PrintWriter out = response.getWriter();
-                    out.write(objectMapper.writeValueAsString(new ResultInfo(false,408,"请先登录",null)));
+                    out.write(objectMapper.writeValueAsString(new ResultInfo(false, 408, "请先登录", null)));
                     out.flush();
                     out.close();
                 })
                 .and()
                 .authorizeRequests()
-                .antMatchers("/search","/wechat/**","/CheckCode","/operator/login","/login","/").permitAll()
+                .antMatchers("/system-v2/**", "/search", "/wechat/**", "/CheckCode", "/operator/login", "/login", "/").permitAll()
                 .and()
                 .authorizeRequests()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling()
-                .accessDeniedHandler((request,response,ex) -> {
+                .accessDeniedHandler((request, response, ex) -> {
                     response.setContentType("application/json;charset=utf-8");
                     response.setStatus(HttpServletResponse.SC_OK);
                     PrintWriter out = response.getWriter();
-                    out.write(objectMapper.writeValueAsString(new ResultInfo(false,403,"权限不足",null)));
+                    out.write(objectMapper.writeValueAsString(new ResultInfo(false, 403, "权限不足", null)));
                     out.flush();
                     out.close();
                 })//必须授权才能访问
@@ -71,16 +72,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout().disable();
 
     }
+
     @Override
     public void configure(WebSecurity web) {
         //对于在header里面增加token等类似情况，放行所有OPTIONS请求。
         web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
     }
+
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
@@ -91,8 +95,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public CorsFilter corsFilter()
-    {
+    public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         // 是否允许请求带有验证信息
