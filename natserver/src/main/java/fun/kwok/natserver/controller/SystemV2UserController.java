@@ -43,4 +43,10 @@ public class SystemV2UserController {
         return systemV2UserService.getUserInfoBySystemV2AndIdCardNum(idcardnum, request);
     }
 
+    @ResponseBody
+    @PostMapping("/system-v2/deleteBindingRelationshipByV2SystemAndUserInfo")
+    public ResultInfo deleteBindingRelationshipByV2SystemAndUserInfo(HttpServletRequest request, @RequestParam(value = "idcardnum", required = false) String idcardnum) {
+        return systemV2UserService.deleteBindingRelationshipByV2SystemAndUserInfo(idcardnum, request);
+    }
+
 }

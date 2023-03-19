@@ -46,11 +46,21 @@ WeChat: #微信公众号相关配置 用户端需要在微信内打开 此参数
 
 个人信息登记、个人信息二维码展示、检测结果查询
 
+目前可以支持不使用微信平台来进行用户数据录入功能，添加了一套独立的用户登录功能（开关位于`UserLoginConfig.useWechet`）
+
 ### 采集端
 
 (路径:/#/operator)
 
 通过扫描试管条码和个人信息二维码进行信息录入
+
+chrome 在47后调用navigator.mediaDevices.getUserMedia 仅能在在https和 loaclhost环境下才可以使用。本机调试的话**只有用户在浏览器端设置信任该域名才可以使用本地摄像头。**
+
+#### 设置方法
+
+地址栏输入`chrome://flags/`, 搜索`unsafely`
+
+enabled 并填入要授信的域名。
 
 ### 后台
 

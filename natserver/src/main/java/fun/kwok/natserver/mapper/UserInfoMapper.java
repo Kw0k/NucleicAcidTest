@@ -46,11 +46,14 @@ public interface UserInfoMapper {
     int userInfoCount();
 
 
-    @Select({"SELECT * FROM userInfo JOIN system_v2_user ON system_v2_user.idcardnum= userInfo.idcardnum WHERE system_v2_user.username=#{username}"})
+    //根据身份证和用户登录name精准查出用户
+    @Select({"SELECT * FROM userInfo join system_v2_uer_record " +
+            "on system_v2_uer_record.idcardnum = userInfo.idcardnum WHERE system_v2_uer_record.user_name=#{username} and userInfo.idcardnum=#{idcardnum}"})
     List<UserInfo> getUserInfoBySystemV2AndIdCardNum(String idcardnum, String username);
 
 
-    @Select({"SELECT * FROM userInfo JOIN system_v2_user ON system_v2_user.idcardnum= userInfo.idcardnum WHERE system_v2_user.username=#{username}"})
+    @Select({"SELECT * FROM userInfo join system_v2_uer_record " +
+            "on system_v2_uer_record.idcardnum = userInfo.idcardnum WHERE system_v2_uer_record.user_name=#{username} "})
     List<UserInfo> getUserInfoBySystemV2Name(String username);
 
 }

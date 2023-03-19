@@ -4,7 +4,7 @@
     <van-button icon="plus" class="addbutton" type="info" size="large" to="info/edit">添加个人信息</van-button>
     <van-divider>已登记信息</van-divider>
     <van-list finished-text="没有更多了">
-      <van-cell v-for="item in list" :key="item.tname" :title="'姓名：' + item.tname + ' 身份证号：' + item.idcardnum"
+      <van-cell v-for="item in list" :key="item.tname" :title="'姓名：' + item.tname + '\t身份证号：' + item.idcardnum"
                 :to="'info/view?idcardnum=' + item.idcardnum">
         <van-icon size="35" name="arrow"/>
       </van-cell>

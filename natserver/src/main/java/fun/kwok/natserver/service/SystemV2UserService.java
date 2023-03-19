@@ -1,9 +1,6 @@
 package fun.kwok.natserver.service;
 
-import fun.kwok.natserver.entity.ResultInfo;
-import fun.kwok.natserver.entity.SystemV2User;
-import fun.kwok.natserver.entity.UserInfo;
-import fun.kwok.natserver.entity.WechatUser;
+import fun.kwok.natserver.entity.*;
 import fun.kwok.natserver.mapper.SystemV2UserMapper;
 import fun.kwok.natserver.mapper.UserInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,12 +45,16 @@ public class SystemV2UserService {
         SystemV2User systemV2User = this.systemV2UserMapper.getSystemV2User(username);
         if (systemV2User == null) {
             this.systemV2UserMapper.addSystemV2User(new SystemV2User(username, password));
-            response.addCookie(new Cookie("systemV2", username + "-" + password));
+            Cookie systemV2 = new Cookie("systemV2", username + "-" + password);
+            response.addCookie(systemV2);
+
             return new ResultInfo(true, 200, "注册并登录成功", null);
         } else {
             //判断密码
             if (systemV2User.getPassword().equals(password)) {
-                response.addCookie(new Cookie("systemV2", username + "-" + password));
+                Cookie systemV2 = new Cookie("systemV2", username + "-" + password);
+                systemV2.setSecure(false);
+                response.addCookie(systemV2);
                 return new ResultInfo(true, 200, systemV2User.getUsername() + "登录成功", null);
             } else {
                 return new ResultInfo(false, 410, "密码错误", null);
@@ -62,7 +63,7 @@ public class SystemV2UserService {
     }
 
     /**
-     * 添加或删除用户信息
+     * 添加或升级用户信息
      *
      * @param request
      * @param userInfo
@@ -90,8 +91,11 @@ public class SystemV2UserService {
             //身份验证通过，可以进行信息录入了
             List<UserInfo> list = userInfoMapper.getUserInfoByIdCardNum(userInfo);
             boolean flag = true;
-            if (systemV2User.getIdcardnum() == null) {
-                systemV2UserMapper.setSystemV2UserIdcardNum(username, userInfo.getIdcardnum());
+            //判断并在record表中添加当前一条关联语句
+            List<SystemV2UserRecord> userV2Record = systemV2UserMapper.getUserV2Record(username, userInfo.getIdcardnum());
+            System.out.println("记录为" + userV2Record.toString());
+            if (list == null || list.size() == 0) {
+                systemV2UserMapper.addUserV2Record(username, userInfo.getIdcardnum());
             }
             if (list != null && list.size() > 0) {
                 if (userInfoMapper.updateUserInfo(userInfo) == 0)
@@ -150,5 +154,26 @@ public class SystemV2UserService {
         }
         List<UserInfo> userInfoBySystemV2Name = userInfoMapper.getUserInfoBySystemV2Name(username);
         return new ResultInfo(true, null, "success", userInfoBySystemV2Name);
+
+    }
+
+    public ResultInfo deleteBindingRelationshipByV2SystemAndUserInfo(String idcardnum, HttpServletRequest request) {
+        String username = null;
+        for (Cookie cookie : request.getCookies()) {
+            if (cookie.getName().equals("systemV2")) {
+                String[] split = cookie.getValue().split("-");
+                username = split[0];
+                break;
+            }
+        }
+        if (username == null) {
+            return new ResultInfo(false, 404, "没有登录啊我去", null);
+        }
+        int i = systemV2UserMapper.deleteBindingRelationshipByV2SystemAndUserInfo(username, idcardnum);
+        if (i > 0) {
+            return new ResultInfo(true, null, "删除成功", null);
+        } else {
+            return new ResultInfo(false, null, "删除失败", null);
+        }
     }
 }

@@ -1,8 +1,11 @@
 package fun.kwok.natserver.mapper;
 
 import fun.kwok.natserver.entity.SystemV2User;
+import fun.kwok.natserver.entity.SystemV2UserRecord;
+import fun.kwok.natserver.entity.UserInfo;
 import fun.kwok.natserver.entity.WechatUser;
 import org.apache.ibatis.annotations.*;
+import org.springframework.security.core.userdetails.User;
 
 import java.util.List;
 
@@ -18,6 +21,12 @@ public interface SystemV2UserMapper {
     @Delete("DELETE FROM system_v2_user WHERE username=#{username} and password=#{password}")
     int delSystemV2User(SystemV2User user);
 
-    @Update({"UPDATE system_v2_user SET idcardnum=#{idcardnum} where username=#{username}"})
-    int setSystemV2UserIdcardNum(String username, String idcardnum);
+    @Select({"select * from system_v2_uer_record where user_name=#{v2Name} and idcardnum=#{idcardnum}"})
+    List<SystemV2UserRecord> getUserV2Record(String v2Name, String idcardnum);
+
+    @Insert({"insert into system_v2_uer_record(user_name,idcardnum) values(#{v2Name},#{idcardnum})"})
+    int addUserV2Record(String v2Name, String idcardnum);
+
+    @Delete("DELETE FROM system_v2_uer_record WHERE user_name=#{username} and idcardnum=#{idcardnum}")
+    int deleteBindingRelationshipByV2SystemAndUserInfo(String username, String idcardnum);
 }

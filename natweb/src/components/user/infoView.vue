@@ -123,38 +123,73 @@ export default {
       });
     },
     handleDelete() {
+      if (UserLoginConfig.useWechet) {
+        this.weChatDelete()
+      } else {
+        this.userV2SystemDelete()
+      }
+    },
+    userV2SystemDelete() {
       Dialog.confirm({
         title: ' 删除确认',
         message: '确定要删除吗？',
-      })
-          .then(() => {
-            Toast.loading({
-              message: '删除中...',
-              forbidClick: true,
-            });
-            this.axios.post(
-                '/wechat/delWechatUser',
-                this.qs.stringify({
-                  idcardnum: this.userInfo.idcardnum,
-                })
-            ).then((response) => {
-              if (response.data.flag) {
-                Toast.success(response.data.msg);
-                this.$router.push("/user/info")
-              } else {
-                Toast.fail(response.data.msg);
-                if (response.data.code === 408) {
-                  this.$router.push("/user/info")
-                }
-              }
+      }).then(() => {
+        Toast.loading({
+          message: '删除中...',
+          forbidClick: true,
+        });
+        this.axios.post(
+            '/system-v2/deleteBindingRelationshipByV2SystemAndUserInfo',
+            this.qs.stringify({
+              idcardnum: this.userInfo.idcardnum,
             })
-                .catch(function (error) {
-                  console.log(error);
-                });
-          })
-          .catch(() => {
-            // on cancel
-          });
+        ).then((response) => {
+          if (response.data.flag) {
+            Toast.success(response.data.msg);
+            this.$router.push("/user/info")
+          } else {
+            Toast.fail(response.data.msg);
+            if (response.data.code === 408) {
+              this.$router.push("/user/info")
+            }
+          }
+        }).catch(function (error) {
+          console.log(error);
+        });
+      }).catch(() => {
+        // on cancel
+      });
+    },
+    weChatDelete() {
+      Dialog.confirm({
+        title: ' 删除确认',
+        message: '确定要删除吗？',
+      }).then(() => {
+        Toast.loading({
+          message: '删除中...',
+          forbidClick: true,
+        });
+        this.axios.post(
+            '/wechat/delWechatUser',
+            this.qs.stringify({
+              idcardnum: this.userInfo.idcardnum,
+            })
+        ).then((response) => {
+          if (response.data.flag) {
+            Toast.success(response.data.msg);
+            this.$router.push("/user/info")
+          } else {
+            Toast.fail(response.data.msg);
+            if (response.data.code === 408) {
+              this.$router.push("/user/info")
+            }
+          }
+        }).catch(function (error) {
+          console.log(error);
+        });
+      }).catch(() => {
+        // on cancel
+      });
     },
     creatQrCode() {
       new QRCode(this.$refs.qrCodeUrl, {
