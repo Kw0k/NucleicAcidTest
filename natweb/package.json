@@ -13,10 +13,11 @@
     "core-js": "^3.6.5",
     "element-ui": "^2.15.6",
     "qrcodejs2": "^0.0.2",
-    "qs": "^6.10.2",
+    "qs": "^6.11.1",
     "vant": "^2.12.37",
     "vue": "^2.6.11",
     "vue-axios": "^3.4.0",
+    "vue-cookies": "^1.8.3",
     "vue-router": "^3.5.3",
     "webrtc-adapter": "^8.1.1"
   },

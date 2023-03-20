@@ -7,7 +7,7 @@ natweb目录为前端项目 采用Vue+ElementUI+VantUI
 
 natserver目录为后端项目 采用SpringBoot+SpringSecurity+Mybatis+MySQL
 
-nat.sql 为数据库文件 (admin默认密码为123456)
+nat.sql 为数据库文件，nat_with_v2_system为兼容微信登录和非微信登陆的数据库 (admin默认密码为123456)
 
 （提醒：部署在服务器上时，请配置SSL证书，前端通过浏览器调用摄像头时必须为https协议）
 
@@ -46,11 +46,21 @@ WeChat: #微信公众号相关配置 用户端需要在微信内打开 此参数
 
 个人信息登记、个人信息二维码展示、检测结果查询
 
+目前可以支持不使用微信平台来进行用户数据录入功能，添加了一套独立的用户登录功能（开关位于`UserLoginConfig.useWechet`），请使用nat_with_v2_system.sql数据库文件来兼容独立用户登录
+
 ### 采集端
 
 (路径:/#/operator)
 
 通过扫描试管条码和个人信息二维码进行信息录入
+
+chrome 在47后调用navigator.mediaDevices.getUserMedia 仅能在在https和 loaclhost环境下才可以使用。本机调试的话**只有用户在浏览器端设置信任该域名才可以使用本地摄像头。**
+
+#### 设置方法
+
+地址栏输入`chrome://flags/`, 搜索`unsafely`
+
+enabled 并填入要授信的域名。
 
 ### 后台
 

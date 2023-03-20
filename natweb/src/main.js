@@ -9,6 +9,9 @@ import ElementUI from 'element-ui'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import qs from 'qs';
+import VueCookies from 'vue-cookies'
+
+Vue.use(VueCookies)
 Vue.use(VueAxios, axios)
 Vue.prototype.qs = qs;
 Vue.use(Vant)
