@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.Date;
+import java.util.List;
 
 @Mapper
 public interface NodeLogMapper {
@@ -51,4 +52,8 @@ public interface NodeLogMapper {
             "material_tube_num=#{tube_num} " +
             "where session_id=#{sid}"})
     int setMaterialTubeNumBySessionId(String sid, Integer tube_num);
+
+    @Select({"select * from node_log"})
+    List<NodeLog> getAll();
+
 }
