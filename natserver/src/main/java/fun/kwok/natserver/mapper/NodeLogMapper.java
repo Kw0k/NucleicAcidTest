@@ -1,6 +1,7 @@
 package fun.kwok.natserver.mapper;
 
 import fun.kwok.natserver.entity.NodeLog;
+import fun.kwok.natserver.entity.SystemUser;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -24,7 +25,7 @@ public interface NodeLogMapper {
     int updateNodeLogSessionID(NodeLog nodeLog);
 
     @Update({"UPDATE node_log SET " +
-            "last_time=#{datetime}" +
+            "last_time=#{datetime} " +
             "where opt_id=#{optID}"})
     int setNodeLastTime(int optID, Date datetime);
 
@@ -56,4 +57,6 @@ public interface NodeLogMapper {
     @Select({"select * from node_log"})
     List<NodeLog> getAll();
 
+    @Select({"select * from systemuser where id = #{id} and role = #{role}"})
+    List<SystemUser> getSystemUser4IDAndRole(Integer id, int role);
 }

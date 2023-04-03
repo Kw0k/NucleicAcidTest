@@ -2,12 +2,14 @@ package fun.kwok.natserver.service;
 
 import fun.kwok.natserver.entity.NodeLog;
 import fun.kwok.natserver.entity.NodeSocketBean;
+import fun.kwok.natserver.entity.SystemUser;
 import fun.kwok.natserver.mapper.NodeLogMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class NodeLogService {
@@ -22,6 +24,9 @@ public class NodeLogService {
             nodeLogMapper.addNode(requestNodeLog.getOpt_id());
             nodeLog = new NodeLog();
             nodeLog.setOpt_id(requestNodeLog.getOpt_id());
+            System.out.println("没有Node");
+        } else {
+            System.out.println("有Node");
         }
         //将socket的session注册到数据库
         nodeLog.setSession_id(requestNodeLog.getSession_id());
@@ -36,7 +41,8 @@ public class NodeLogService {
     }
 
     public void setLastTimeData(int OptID) {
-        nodeLogMapper.setNodeLastTime(OptID, new Date());
+        int lastTime = nodeLogMapper.setNodeLastTime(OptID, new Date());
+        System.out.println("设置在线时间" + lastTime);
     }
 
     public void setDisconnected(String sessionId) {
@@ -65,5 +71,9 @@ public class NodeLogService {
     public void setMaterialTubeNum(String sid, NodeSocketBean nodeSocketBean) {
         Integer tube_num = nodeSocketBean.getNodeLog().getMaterial_tube_num();
         nodeLogMapper.setMaterialTubeNumBySessionId(sid, tube_num);
+    }
+
+    public List<SystemUser> getSystemUser4IDAndRole(Integer id) {
+        return nodeLogMapper.getSystemUser4IDAndRole(id, 2);
     }
 }
