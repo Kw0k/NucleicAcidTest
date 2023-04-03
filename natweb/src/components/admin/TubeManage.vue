@@ -272,6 +272,7 @@ export default {
           }else {
             this.tableData=response.data.data;
           }
+          console.log( this.tableData)
         })
             .catch(function (error) {
               console.log(error);
