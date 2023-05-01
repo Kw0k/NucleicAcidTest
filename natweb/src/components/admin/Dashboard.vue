@@ -148,6 +148,21 @@
               </el-tag>
             </template>
           </el-table-column>
+          <el-table-column label="下发命令" align="center">
+            <template slot-scope="scope">
+              <el-select v-model="selectInfo[scope.$index]" placeholder="请选择命令">
+                <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                </el-option>
+              </el-select>
+              <el-button type="primary" size="mini" plain
+                         @click="handleCommand(scope.row.opt_id,selectInfo[scope.$index])">下发命令
+              </el-button>
+            </template>
+          </el-table-column>
         </el-table>
       </el-col>
     </el-row>
@@ -171,6 +186,23 @@ export default {
       role: 0,
       rolestr: '',
       allNodeData: [],
+      options: [{
+        value: '1',
+        label: '操作1'
+      }, {
+        value: '2',
+        label: '操作2'
+      }, {
+        value: '3',
+        label: '操作3'
+      }, {
+        value: '4',
+        label: '操作4'
+      }, {
+        value: '5',
+        label: '操作5'
+      }],
+      selectInfo: [],
       nodeRedreshTimer: ''
     }
   },
@@ -187,8 +219,22 @@ export default {
     this.nodeRedreshTimer = setInterval(this.getAllNodeData, 1000)
   },
   methods: {
-    logScope(scope) {
-      console.log(scope)
+    handleCommand(optId, selectInfo) {
+      console.log(optId, selectInfo)
+      //
+      this.axios.post(
+          "/node/opt",
+          this.qs.stringify({
+            optId: optId,
+            instruction: selectInfo,
+          })
+      ).then((response) => {
+        if (response.data.flag) {
+
+        }
+      }).catch(function (error) {
+        console.log(error);
+      });
     },
     getAllNodeData() {
       this.axios.post(

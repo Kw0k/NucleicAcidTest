@@ -59,4 +59,7 @@ public interface NodeLogMapper {
 
     @Select({"select * from systemuser where id = #{id} and role = #{role}"})
     List<SystemUser> getSystemUser4IDAndRole(Integer id, int role);
+
+    @Select(("select session_id from node_log where opt_id=#{optID} "))
+    String getUserSession(Integer optID);
 }

@@ -1,8 +1,7 @@
 package fun.kwok.natserver.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fun.kwok.natserver.entity.NodeLog;
 import fun.kwok.natserver.entity.NodeSocketBean;
 import fun.kwok.natserver.entity.SystemUser;
 import fun.kwok.natserver.service.NodeLogService;
@@ -67,9 +66,14 @@ public class NodeWebSocketHandler extends TextWebSocketHandler {
                     return;
                 }
                 nodeSocketBean.nodeLog.setSession_id(session.getId());
-                nodeLogService.registerOrOnLineNode(nodeSocketBean.nodeLog);
+                NodeLog nodeLogResult = nodeLogService.registerOrOnLineNode(nodeSocketBean.nodeLog);
                 //修改最后一次连接时间
                 nodeLogService.setLastTimeData(nodeSocketBean.nodeLog.getOpt_id());
+                //下发服务器数据给节点
+                NodeSocketBean result = new NodeSocketBean();
+                result.setApiPort("sync_data");
+                result.setNodeLog(nodeLogResult);
+                sendMessage(sessions.get(session.getId()), objectMapper.writeValueAsString(result));
                 return;
             }
             case ("staff_num"): {
@@ -79,6 +83,7 @@ public class NodeWebSocketHandler extends TextWebSocketHandler {
                     return;
                 }
                 nodeLogService.setStaffNum(session.getId(), nodeSocketBean);
+                updateNodeData(session, nodeSocketBean);
                 return;
             }
             case ("material_tube_num"): {
@@ -88,6 +93,7 @@ public class NodeWebSocketHandler extends TextWebSocketHandler {
                     return;
                 }
                 nodeLogService.setMaterialTubeNum(session.getId(), nodeSocketBean);
+                updateNodeData(session, nodeSocketBean);
                 return;
             }
             case ("material_swab_num"): {
@@ -97,6 +103,7 @@ public class NodeWebSocketHandler extends TextWebSocketHandler {
                     return;
                 }
                 nodeLogService.setMaterialSwabNum(session.getId(), nodeSocketBean);
+                updateNodeData(session, nodeSocketBean);
                 return;
             }
             case ("material_alcohol_num"): {
@@ -106,6 +113,7 @@ public class NodeWebSocketHandler extends TextWebSocketHandler {
                     return;
                 }
                 nodeLogService.setMaterialAlcoholNum(session.getId(), nodeSocketBean);
+                updateNodeData(session, nodeSocketBean);
                 return;
             }
             case ("heartbeat"): {
@@ -115,6 +123,14 @@ public class NodeWebSocketHandler extends TextWebSocketHandler {
 
             }
         }
+    }
+
+    private void updateNodeData(WebSocketSession session, NodeSocketBean nodeSocketBean) throws IOException {
+        NodeLog nodeLog = nodeLogService.selectNode4OptId(nodeSocketBean.getNodeLog().getOpt_id());
+        NodeSocketBean nsb = new NodeSocketBean();
+        nsb.setApiPort("sync_data");
+        nsb.setNodeLog(nodeLog);
+        sendMessage(sessions.get(session.getId()), objectMapper.writeValueAsString(nsb));
     }
 
 
@@ -174,6 +190,16 @@ public class NodeWebSocketHandler extends TextWebSocketHandler {
     public void sendMessage(WebSocketSession session, String message) throws IOException {
         if (session.isOpen()) {
             session.sendMessage(new TextMessage(message));
+        }
+    }
+
+    public void sendInstructionByNodeId(Integer nodeId, Integer instruction) throws IOException {
+        String userSession = nodeLogService.getUserSession(nodeId);
+        if (sessions.containsKey(userSession)) {
+            if (sessions.get(userSession).isOpen()) {
+                WebSocketSession session = sessions.get(userSession);
+                session.sendMessage(new TextMessage("{\"apiPort\":\"instruction\",\"instruction\":\"" + instruction + "\"}"));
+            }
         }
     }
 }

@@ -76,4 +76,12 @@ public class NodeLogService {
     public List<SystemUser> getSystemUser4IDAndRole(Integer id) {
         return nodeLogMapper.getSystemUser4IDAndRole(id, 2);
     }
+
+    public String getUserSession(Integer nodeId) {
+        return nodeLogMapper.getUserSession(nodeId);
+    }
+
+    public NodeLog selectNode4OptId(int optID) {
+        return nodeLogMapper.selectNode4OptId(optID);
+    }
 }
