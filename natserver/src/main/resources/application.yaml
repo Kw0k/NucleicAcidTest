@@ -6,9 +6,9 @@ spring:
   main:
     allow-circular-references: true
   datasource:
-    url: jdbc:mysql://192.168.157.131:3306/nat?serverTimezone=GMT%2B8
+    url: jdbc:mysql://localhost:3306/nat?serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true&useSSL=false
     username: nat
-    password: ZAGeeCnAAnzyxGNj
+    password: f7m5re6i43p2hcJx
     driver-class-name: com.mysql.cj.jdbc.Driver
 server:
   port: 8888
