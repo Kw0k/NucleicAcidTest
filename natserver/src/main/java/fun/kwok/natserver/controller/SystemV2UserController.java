@@ -2,7 +2,6 @@ package fun.kwok.natserver.controller;
 
 import fun.kwok.natserver.entity.ResultInfo;
 import fun.kwok.natserver.entity.UserInfo;
-import fun.kwok.natserver.entity.WechatUser;
 import fun.kwok.natserver.service.SystemV2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 @Controller
 public class SystemV2UserController {

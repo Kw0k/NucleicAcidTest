@@ -54,7 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 })
                 .and()
                 .authorizeRequests()
-                .antMatchers("/system-v2/**", "/search", "/wechat/**", "/CheckCode", "/operator/login", "/login", "/").permitAll()
+                .antMatchers(WebSocketConfig.NodeEndPoint, "/system-v2/**", "/node/**", "/search", "/wechat/**", "/CheckCode", "/operator/login", "/login", "/").permitAll()
                 .and()
                 .authorizeRequests()
                 .anyRequest().authenticated()
